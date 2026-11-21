@@ -50,7 +50,7 @@ export function createMeetDesk({ getState, updateRegion }) {
         <span class="schedule-time"><b>${h(start ? start.slice(11) : '待定')}</b><small>${h(start ? `${start.slice(5, 10).replace('-', '/')} · 检 ${checkInTime(start)}` : scheduleSession(event.schedule))}</small></span>
         <span class="schedule-name" title="${h(title)}"><b>${h(title)}</b><small>${h(current ? '当前赛事' : event.schedule.scored ? '已计分' : event.competitors.length ? `${event.competitors.length} 条名单` : '')}</small></span>
         <span class="meet-row-actions">${button('名单', { action: 'schedule-prep', key: event.id, accessible: '准备名单 · ' + title, small: true })}
-        ${button(current ? '当前' : '切换', { action: 'schedule-live', key: event.id, accessible: '切换赛事 · ' + title, small: true, disabled: current })}</span>
+        ${button(current ? '当前' : '切换', { action: 'schedule-live', key: event.id, accessible: '切换赛事 · ' + title, small: true, variant: current ? '' : 'capture', disabled: current })}</span>
       </div>`;
     }).join('') : '<p class="empty-table">没有符合条件的赛事。</p>');
     schedule.querySelector('#schedule-summary').textContent = `${listed.length} / ${ordered.length} 场`;

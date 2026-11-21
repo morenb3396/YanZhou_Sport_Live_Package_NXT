@@ -10,32 +10,38 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="wordmark"><img src="/assets/yanzhou-seal.png" alt="中山市烟洲中学校徽" width="32" height="32"><div><h1>烟洲体育导播台</h1><span>中山市烟洲中学</span></div><a class="button compact" id="switch-mode" href="/control.html?mode=demo">彩排模式</a></div>
+      <div class="wordmark"><img src="/assets/yanzhou-seal.png" alt="中山市烟洲中学校徽" width="32" height="32"><div><h1>烟洲体育导播台</h1><span>中山市烟洲中学</span></div></div>
       <div class="topbar-tools">
-        <a class="button compact" id="open-output" target="_blank" rel="noopener" aria-label="打开透明输出" title="打开 OBS 透明输出"><span>打开透明输出</span></a>
-        <button id="copy-output" class="button compact" type="button" data-action="copy" aria-label="复制 OBS 地址" title="复制 OBS 地址"><span>复制地址</span></button>
-        <button id="open-meet" class="button compact" type="button" data-action="meet" aria-label="直播信息" title="直播信息"><span>直播信息</span></button>
+        <a class="button compact" id="switch-mode" href="/control.html?mode=demo">彩排模式</a>
         <span id="connection" class="connection" role="status">正在连接</span>
+        <span class="tool-group">
+          <button id="open-meet" class="button compact" type="button" data-action="meet" aria-label="直播信息" title="直播信息"><span>直播信息</span></button>
+          <button id="copy-output" class="button compact" type="button" data-action="copy" aria-label="复制 OBS 地址" title="复制 OBS 地址"><span>复制地址</span></button>
+          <a class="button compact" id="open-output" target="_blank" rel="noopener" aria-label="打开透明输出" title="打开 OBS 透明输出"><span>打开透明输出</span></a>
+        </span>
       </div>
     </div>
   </header>
+  <p id="rehearsal-note" class="rehearsal-note" hidden>彩排中。这份数据不会写入正式赛事。</p>
   <main class="workspace" data-workspace="work">
-    <div class="panel event-bar">
-      <div id="event-divisions" class="event-divisions" role="group" aria-label="比赛组别"></div>
-      <div id="active-event-picker"></div>
-      <button type="button" class="button compact" data-action="edit-event" id="edit-active" disabled>编辑赛事</button>
-      <button type="button" class="button compact primary" data-action="new-event" id="new-event">新建赛事</button>
-    </div>
-    <div id="operations"></div>
-    <nav class="mobile-nav" aria-label="工作区">
-      <button type="button" data-action="workspace" data-key="work" aria-controls="work-panel" aria-pressed="true">赛事工作台</button>
-      <button type="button" data-action="workspace" data-key="output" aria-controls="output-column" aria-pressed="false">节目监看与输出</button>
-    </nav>
-    <div class="desk">
+    <div class="stage">
+      <div class="panel event-bar">
+        <div id="event-divisions" class="event-divisions" role="group" aria-label="比赛组别"></div>
+        <div id="active-event-picker" class="event-picker"></div>
+        <div class="event-actions">
+          <button type="button" class="button compact" data-action="edit-event" id="edit-active" disabled>编辑赛事</button>
+          <button type="button" class="button compact" data-action="new-event" id="new-event">新建赛事</button>
+        </div>
+      </div>
+      <div id="operations"></div>
+      <nav class="mobile-nav" aria-label="工作区">
+        <button type="button" data-action="workspace" data-key="work" aria-controls="work-panel" aria-pressed="true">赛事工作台</button>
+        <button type="button" data-action="workspace" data-key="output" aria-controls="output-column" aria-pressed="false">节目监看与输出</button>
+      </nav>
       <section class="panel work-panel" id="work-panel" data-view="ranking" aria-label="赛事工作台">
         <div class="work-tabs" aria-label="赛事视图">
           <button type="button" data-action="work-view" data-key="schedule" id="open-schedule" aria-pressed="false" aria-controls="school-schedule">赛程</button>
-          <button type="button" data-action="work-view" data-key="ranking" id="open-ranks" aria-pressed="true" aria-controls="ranking-panel">冠军</button>
+          <button type="button" data-action="work-view" data-key="ranking" id="open-ranks" aria-pressed="true" aria-controls="ranking-panel">名次</button>
           <button type="button" data-action="work-view" data-key="roster" id="open-roster" aria-pressed="false" aria-controls="competitors">备赛名单</button>
           <!-- 班级积分先不用
           <button type="button" data-action="work-view" data-key="points" id="open-points" aria-pressed="false" aria-controls="school-points">班级积分</button>
@@ -52,7 +58,7 @@
         </section>
         <section class="ranking-panel" id="ranking-panel" aria-labelledby="ranking-title">
           <div class="work-toolbar">
-            <div class="ranking-heading"><h2 id="ranking-title">快速排名</h2><span id="rank-mode"></span></div>
+            <div class="ranking-heading"><h2 id="ranking-title">名次</h2><span id="rank-mode"></span></div>
             <div class="work-actions"><input id="rank-search" type="search" placeholder="姓名或号码" aria-label="搜索选手" autocomplete="off"><div id="rank-data-tools"></div><div id="rank-mobile-action"></div></div>
           </div>
           <div id="school-race-actions" class="school-race-actions"></div>
@@ -77,24 +83,24 @@
           <div class="work-footer"><span id="roster-summary"></span><div class="pager" id="roster-pager" aria-label="名单分页"></div></div>
         </section>
       </section>
-      <aside class="output-column" id="output-column" aria-label="节目监看与输出">
-        <section class="panel monitor" aria-labelledby="monitor-title">
-          <div class="panel-heading monitor-heading">
-            <div class="monitor-label"><h2 id="monitor-title">节目监看</h2><span class="mode-label" id="mode-label" hidden>彩排</span></div>
-            <div class="monitor-tools">
-              <select id="monitor-backdrop" aria-label="监看底图" title="底图仅在导播台监看中显示"><option value="grid">棋盘格底图</option><option value="dark">深灰底图</option><option value="track">跑道底图</option></select>
-              <label class="check-field"><input type="checkbox" id="monitor-guides">安全区</label>
-            </div>
-          </div>
-          <div class="monitor-body" data-backdrop="grid"><iframe id="preview" title="OBS 画面预览"></iframe></div>
-        </section>
-        <section class="panel layers-panel" id="layers-panel" aria-labelledby="modules-title">
-          <div class="panel-heading"><h2 id="modules-title">输出</h2><span class="layer-count" id="layer-count" aria-label="上屏图层数量"></span><button type="button" class="button compact" id="close-layout" data-action="output-home" hidden>返回输出</button></div>
-          <div id="layer-controls"><div id="rank-controls" class="rank-controls"></div><div id="module-list" class="module-list"></div><div class="output-tools"><div id="module-footer"></div><button type="button" class="button compact" data-action="layout" id="open-layout" aria-controls="layout-inspector">位置和样式</button></div></div>
-          <div id="layout-inspector" class="layout-inspector" hidden></div>
-        </section>
-      </aside>
     </div>
+    <aside class="output-column" id="output-column" aria-label="节目监看与输出">
+      <section class="panel monitor" aria-labelledby="monitor-title">
+        <div class="panel-heading monitor-heading">
+          <div class="monitor-label"><h2 id="monitor-title">节目监看</h2><span class="mode-label" id="mode-label" hidden>彩排</span></div>
+          <div class="monitor-tools">
+            <select id="monitor-backdrop" aria-label="监看底图" title="底图仅在导播台监看中显示"><option value="grid">棋盘格底图</option><option value="dark">深灰底图</option><option value="track">跑道底图</option></select>
+            <label class="check-field"><input type="checkbox" id="monitor-guides">安全区</label>
+          </div>
+        </div>
+        <div class="monitor-body" data-backdrop="grid"><iframe id="preview" title="OBS 画面预览"></iframe></div>
+      </section>
+      <section class="panel layers-panel" id="layers-panel" aria-labelledby="modules-title">
+        <div class="panel-heading"><h2 id="modules-title">输出</h2><span class="layer-count" id="layer-count" aria-label="上屏图层数量"></span><button type="button" class="button compact" id="close-layout" data-action="output-home" hidden>返回输出</button></div>
+        <div id="layer-controls"><div id="rank-controls" class="rank-controls"></div><div id="module-list" class="module-list"></div><div class="output-tools"><div id="module-footer"></div><button type="button" class="button compact" data-action="layout" id="open-layout" aria-controls="layout-inspector">位置和样式</button></div></div>
+        <div id="layout-inspector" class="layout-inspector" hidden></div>
+      </section>
+    </aside>
   </main>
   <div id="toast" class="toast" role="status" hidden></div>
   <dialog id="editor" aria-labelledby="editor-title">

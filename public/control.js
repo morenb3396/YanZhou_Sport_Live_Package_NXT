@@ -44,6 +44,8 @@ const initialIcons = {
 for (const [selector, glyph] of Object.entries(initialIcons)) $(selector).insertAdjacentHTML('afterbegin', icon(glyph));
 $('#open-output').href = output;
 $('#mode-label').hidden = !demo;
+$('#rehearsal-note').hidden = !demo;
+$('#switch-mode').classList.toggle('primary', demo);
 $('#switch-mode').href = pageUrl('control', {}, !demo);
 $('#switch-mode').innerHTML = `${icon(demo ? 'left' : 'start')}<span>${demo ? '返回正式直播' : '彩排模式'}</span>`;
 $('#switch-mode').setAttribute('aria-label', demo ? '返回正式直播' : '彩排模式');
@@ -184,7 +186,8 @@ $('#prep-event-picker').addEventListener('change', (e) => {
 function renderLayers(event) {
   const available = Object.keys(MODULES).filter((key) => applicable(key, event));
   const visible = available.filter((key) => state.modules[key].visible).length;
-  $('#layer-count').textContent = `画面中 ${visible} / ${available.length}`;
+  $('#layer-count').textContent = `在播 ${visible} / ${available.length}`;
+  $('#layers-panel').dataset.onair = visible ? 'yes' : 'no';
   updateRegion('#module-list', moduleList(state, event));
   updateRegion('#module-footer', button(visible ? '一键清屏' : '恢复基础包装', { action: visible ? 'clear' : 'base', glyph: 'screen', variant: visible ? 'clear-output' : '' }));
 }
@@ -374,7 +377,9 @@ const handlers = {
   },
   page({ key, value }) { return run('page:set', { eventId: state.activeEventId, key, page: value }); },
   'roster-page'({ value }) { rosterView.page = value; renderRoster(); },
-  clear() { return run('module:clear', { eventId: state.activeEventId }, '画面已清屏'); },
+  clear() {
+    dialogs.confirm('清空画面？', '当前赛事已上屏的图层会全部隐藏。计时和名次保留。', '一键清屏', () => run('module:clear', { eventId: state.activeEventId }, '画面已清屏'), 'danger');
+  },
   base() { return run('module:base', { eventId: state.activeEventId }, '已恢复基础包装'); },
   meet() { dialogs.meet(state, output); },
   text({ key }) { dialogs.text(state, key); },
